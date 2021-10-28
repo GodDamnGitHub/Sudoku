@@ -3,18 +3,13 @@ import { Button, View, Text, StyleSheet, ImageBackground, Image, TextInput } fro
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import Grid from './Grid.js';
+import * as easyData from '../data/easyData.json';
+
 
 
 function EasyModeScreen() {
-  let vals = [["","",5,8,"","",9,2,""],
-              ["","","","",4,9,8,5,1], 
-              ["",9,1,2,"","","","",3],
-              ["","",3,4,2,"",5,6,""],
-              ["",5,4,6,"",3,"","",""],
-              [6,8,"",9,1,5,"",4,""],
-              [4,"","","",3,"",6,"",""],
-              ["","",2,5,9,"","","",""],
-              ["","",8,"",6,4,"","",9]];
+  var rand = 0 + Math.floor(Math.random() * (9 - 0 + 1));
+  let vals = easyData.sudokuList[0];
   const [isInput, setIsInput] = useState(false);
   const [userName, setUserName] = useState("");
   if (!isInput) {

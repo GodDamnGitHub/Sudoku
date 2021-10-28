@@ -18,9 +18,7 @@ const Timer = ({updateTime}) => {
 
 
   return (
-    <div>
-      <h1>{parseInt(second / 60) < 10 ? "0" + parseInt(second / 60) : parseInt(second % 60)}:{(second % 60) < 10 ? "0" + second % 60 : second % 60}</h1>
-    </div>
+    <Text style={{fontSize: 30}}>{parseInt(second / 60) < 10 ? "0" + parseInt(second / 60) : parseInt(second / 60)}:{(second % 60) < 10 ? "0" + second % 60 : second % 60}</Text>
   )
 }
 
@@ -29,26 +27,5 @@ export default Timer;
 
 
 const styles = StyleSheet.create({
-  largeGrid:{
-    border:'solid black'
-  },
-  gridRow:{
-    flexDirection: 'row'
-  },
-  smallGrid:{
-    border:'thin solid black'
-  },
-  Row: {
-    flexDirection: 'row',
-    backgroundColor: 'white',
-    justifyContent: 'center',
-  },
-  Cell:{
-    justifyContent: 'center',
-    alignItems: 'center',
-    backgroundColor: '#EAF2F8',
-    margin: 2,
-    height: 40,
-    width: 40,
-  }
+
 });

@@ -6,7 +6,7 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 function HardModeScreen() {
   return (
     <View style={styles.container}>
-      <Text>HighScoresScreen</Text>
+      <Text>HardModeScreen</Text>
     </View>
   );
 }

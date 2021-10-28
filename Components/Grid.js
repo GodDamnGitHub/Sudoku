@@ -1,5 +1,5 @@
 import React, { useState, useEffect, useRef, createRef, setState } from "react"
-import { Text, TextInput, View, StyleSheet, Button } from 'react-native';
+import { Text, TextInput, View, StyleSheet, Button, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 import Timer from './Timer';
@@ -13,11 +13,10 @@ const Cell = ({id0, id1, id2, id3, vals, isRed, update}) => {
   let x = 3*id0+id2, y = 3*id1+id3;
   return (
     <View style={isRed[x][y] ? styles.CellRed : styles.CellBlue}>
-      <Text style={{fontSize: 25}}>
         {vals[x][y] == "" ? 
         <TextInput
           ref={inputRef}
-          style={{height: 38, width: 38, fontSize: 25, color: 'blue', textAlign: 'center'}}
+          style={{height: 28, width: 28, fontSize: 22, color: 'blue', textAlign: 'center'}}
           maxLength = {1}
           onChangeText = {(text) => {
             if ((text > 0 && text <= 9) || text == "") {
@@ -28,11 +27,12 @@ const Cell = ({id0, id1, id2, id3, vals, isRed, update}) => {
           }}
         > 
         </TextInput>
-        : vals[3*id0+id2][3*id1+id3]}
-      </Text>
+        : <Text style={{fontSize:22}}>{vals[3*id0+id2][3*id1+id3]}</Text>}
     </View>
   )
 }
+
+
 
 const Row = ({id0, id1, id2, vals, isRed, update}) => {
   return (
@@ -156,6 +156,7 @@ const Grid = ({vals, userName}) => {
 
 
 
+
   const updateTime = (time) => {
     setTime(time);
   }
@@ -248,11 +249,20 @@ const Grid = ({vals, userName}) => {
 
   }
 
+  const updateSelected = (x, y) => {
+    setCurX(x);
+    setCurY(y);
+  }
+
   return (
-    <View style={styles.container}>
-      <View style={styles.mainPart}>
+    <KeyboardAvoidingView 
+      behavior={Platform.OS === "ios" ? "padding" : "height"}
+      style={styles.container}>
+      <View style={styles.timerPart}>
         {isFinished ? <Text>N/A</Text> : <Timer updateTime={updateTime}/>}
-        <LargeGrid vals={vals} isRed={isRed} update={update}/>
+      </View>
+      <View style={styles.mainPart}>
+        <LargeGrid vals={vals} isRed={isRed} update={update} updateSelected={updateSelected}/>
       </View>
       <View style={styles.subPart}>
         <View style={styles.subPart1}>
@@ -297,7 +307,7 @@ const Grid = ({vals, userName}) => {
 
       </View>
 
-    </View>
+    </KeyboardAvoidingView>
     //<LargeGrid vals={vals} userVals={userVals} setUserVals={setUserVals}/>
   );
 }
@@ -312,13 +322,19 @@ const styles = StyleSheet.create({
     flex: 1,
     justifyContent: 'space-around'
   },
+  timerPart: {
+    flex: 1.5,
+    alignItems: 'center',
+    justifyContent: 'flex-start',
+    padding: 10
+  },
   mainPart: {
-    flex: 7,
+    flex: 5,
     alignItems: 'center',
     justifyContent: 'space-around'
   },
   subPart: {
-    flex: 3,
+    flex: 2,
     flexDirection: 'row',
     alignItems: 'center',
     justifyContent: 'space-around'
@@ -334,13 +350,13 @@ const styles = StyleSheet.create({
     justifyContent: 'center'
   },
   largeGrid:{
-    border:'solid black'
+    borderWidth: 3
   },
   gridRow:{
     flexDirection: 'row'
   },
   smallGrid:{
-    border:'thin solid black'
+    borderWidth: 1.5
   },
   Row: {
     flexDirection: 'row',
@@ -352,15 +368,33 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     backgroundColor: '#EAF2F8',
     margin: 2,
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
   },
   CellRed:{
     justifyContent: 'center',
     alignItems: 'center',
     backgroundColor: '#F5B7B1',
     margin: 2,
-    height: 40,
-    width: 40,
+    height: 30,
+    width: 30,
+  },
+  CellButton:{
+    justifyContent: 'center',
+    alignItems: 'center',
+    backgroundColor: '#ff9933',
+    margin: 2,
+    borderWidth: 1,
+    height: 30,
+    width: 30,
+  },
+  Circle: {
+    justifyContent: 'center',
+    alignItems: 'center',
+    width: 30,
+    height: 30,
+    margin: 2,
+    borderRadius: 15,
+    backgroundColor: '#ff9933',
   }
 });

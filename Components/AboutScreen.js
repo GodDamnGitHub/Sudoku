@@ -45,7 +45,7 @@ const styles = StyleSheet.create({
   p1: {
     flex: 2,
     padding: 20,
-    border:'solid black',
+    borderWidth: 3
   },
 });
 

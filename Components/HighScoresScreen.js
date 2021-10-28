@@ -9,7 +9,6 @@ function HighScoresScreen() {
   const getData = async () => {
     try {
       const jsonValue = await AsyncStorage.getItem('@sudoku_bes');
-      alert(jsonValue);
       let data = null
       if (jsonValue!=null) {
         data = JSON.parse(jsonValue)
@@ -17,7 +16,6 @@ function HighScoresScreen() {
         console.log('just set Info, Correct and Answered')
       } else {
         console.log('just read a null value from Storage')
-        alert("!");
       }
     } catch(e) {
       console.log("error in getData ")
@@ -34,21 +32,7 @@ function HighScoresScreen() {
 
     
     <View style={styles.container}>
-      <FlatList
-        data={[
-          {key: 'Devin'},
-          {key: 'Dan'},
-          {key: 'Dominic'},
-          {key: 'Jackson'},
-          {key: 'James'},
-          {key: 'Joel'},
-          {key: 'John'},
-          {key: 'Jillian'},
-          {key: 'Jimmy'},
-          {key: 'Julie'},
-        ]}
-        renderItem={({item}) => <Text style={styles.item}>{item.key}</Text>}
-      />
+      <Text>HighScoresScreen</Text>
     </View>
   );
 }
