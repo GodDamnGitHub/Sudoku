@@ -9,7 +9,7 @@ A sudoku app based on react native,  including hint, answer checking and highest
 
 <img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/web.png" alt="image-20211112010551201" width="600" />
 
-<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/iOS.png" alt="image-20211112010822969" width="200" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/iOS.png" alt="image-20211112010822969" width="400" />
 
 
 
