@@ -7,9 +7,10 @@ import * as easyData from '../data/easyData.json';
 
 
 
+
 function EasyModeScreen() {
   var rand = 0 + Math.floor(Math.random() * (9 - 0 + 1));
-  let vals = easyData.sudokuList[0];
+  let vals = easyData.sudokuList[rand];
   const [isInput, setIsInput] = useState(false);
   const [userName, setUserName] = useState("");
   if (!isInput) {

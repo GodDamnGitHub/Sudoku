@@ -5,13 +5,29 @@ import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage'
 
 
+const Item = ({ name, time }) => (
+  <View style={styles.item}>
+    <Text style={{fontSize:32}}>{name}    {time}</Text>
+  </View>
+);
+
+
 function HighScoresScreen() {
+
+  const [data, setData] = useState("");
+
+
+  const renderItem = ({ item }) => (
+    <Item name={item.userName} time={item.timeText} />
+  );
+
   const getData = async () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('@sudoku_bes');
+      const jsonValue = await AsyncStorage.getItem('@sudoku_scores');
       let data = null
       if (jsonValue!=null) {
-        data = JSON.parse(jsonValue)
+        data = JSON.parse(jsonValue);
+        setData(data.sort((a,b)=>a.time-b.time));
         //alert(jsonValue);
         console.log('just set Info, Correct and Answered')
       } else {
@@ -24,15 +40,28 @@ function HighScoresScreen() {
     }
   }
 
+  const clearAll = async () => {
+    try {
+      await AsyncStorage.clear();
+    } catch(e) {
+      console.dir(e);
+    }
+  }
+
   useEffect(() => {
+    //clearAll();
     getData()
   },[])
 
+  
   return (
 
     
     <View style={styles.container}>
-      <Text>HighScoresScreen</Text>
+      <FlatList
+        data={data}
+        renderItem={renderItem}
+      />
     </View>
   );
 }
@@ -45,6 +74,12 @@ const styles = StyleSheet.create({
     alignItems: 'center',
     justifyContent: 'center'
   },
+  item: {
+    backgroundColor: 'grey',
+    padding: 20,
+    marginVertical: 8,
+    marginHorizontal: 16,
+  }
 });
 
 

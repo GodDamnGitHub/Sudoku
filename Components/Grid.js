@@ -1,76 +1,82 @@
-import React, { useState, useEffect, useRef, createRef, setState } from "react"
+import React, { useState, useEffect, useRef, createRef, setState, useContext, createContext } from "react"
 import { Text, TextInput, View, StyleSheet, Button, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
 import Constants from 'expo-constants';
-import AsyncStorage from '@react-native-async-storage/async-storage'
+import AsyncStorage from '@react-native-async-storage/async-storage';
 import Timer from './Timer';
+import ValueProvider, {useValue} from './ValueContext';
 
 
 
-
-const Cell = ({id0, id1, id2, id3, vals, isRed, update}) => {
+const Cell = ({id0, id1, id2, id3}) => {
   const inputRef = React.createRef()
+  const value = useValue();
+  const vals = value.vals;
+  const isRed = value.isRed;
+  const update = value.update;
+
 
   let x = 3*id0+id2, y = 3*id1+id3;
   return (
+
     <View style={isRed[x][y] ? styles.CellRed : styles.CellBlue}>
-        {vals[x][y] == "" ? 
-        <TextInput
-          ref={inputRef}
-          style={{height: 28, width: 28, fontSize: 22, color: 'blue', textAlign: 'center'}}
-          maxLength = {1}
-          onChangeText = {(text) => {
-            if ((text > 0 && text <= 9) || text == "") {
-              update(x, y, text);
-            } else {
-              inputRef.current.clear()
-            }
-          }}
-        > 
-        </TextInput>
-        : <Text style={{fontSize:22}}>{vals[3*id0+id2][3*id1+id3]}</Text>}
-    </View>
+      {vals[x][y] == "" ? 
+      <TextInput
+        ref={inputRef}
+        style={{height: 28, width: 28, fontSize: 22, color: 'blue', textAlign: 'center'}}
+        maxLength = {1}
+        onChangeText = {(text) => {
+          if ((text > 0 && text <= 9) || text == "") {
+            update(x, y, text);
+          } else {
+            inputRef.current.clear()
+          }
+        }}
+      > 
+      </TextInput>
+      : <Text style={{fontSize:22}}>{vals[3*id0+id2][3*id1+id3]}</Text>}
+      
+    </View>  
   )
 }
 
 
-
-const Row = ({id0, id1, id2, vals, isRed, update}) => {
+const Row = ({id0, id1, id2}) => {
   return (
     <View style={styles.Row}>
-      <Cell id0={id0} id1={id1} id2={id2} id3={0} vals={vals}  isRed={isRed} update={update}/>
-      <Cell id0={id0} id1={id1} id2={id2} id3={1} vals={vals}  isRed={isRed} update={update}/>
-      <Cell id0={id0} id1={id1} id2={id2} id3={2} vals={vals}  isRed={isRed} update={update}/>
+      <Cell id0={id0} id1={id1} id2={id2} id3={0}/>
+      <Cell id0={id0} id1={id1} id2={id2} id3={1}/>
+      <Cell id0={id0} id1={id1} id2={id2} id3={2}/>
     </View>
   )
 }
 
 
-const SmallGrid = ({id0, id1, vals, isRed, update}) => {
+const SmallGrid = ({id0, id1}) => {
   return (
     <View style={styles.smallGrid}>
-      <Row id0={id0} id1={id1} id2={0} vals={vals}  isRed={isRed} update={update}/>
-      <Row id0={id0} id1={id1} id2={1} vals={vals}  isRed={isRed} update={update}/>
-      <Row id0={id0} id1={id1} id2={2} vals={vals}  isRed={isRed} update={update}/>
+      <Row id0={id0} id1={id1} id2={0}/>
+      <Row id0={id0} id1={id1} id2={1}/>
+      <Row id0={id0} id1={id1} id2={2}/>
     </View>
   )
 }
 
-const GridRow = ({id, vals, isRed, update}) => {
+const GridRow = ({id}) => {
   return (
     <View style={styles.gridRow}>
-      <SmallGrid id0={id} id1={0} vals={vals}  isRed={isRed} update={update}/>
-      <SmallGrid id0={id} id1={1} vals={vals}  isRed={isRed} update={update}/>
-      <SmallGrid id0={id} id1={2} vals={vals}  isRed={isRed} update={update}/>
+      <SmallGrid id0={id} id1={0}/>
+      <SmallGrid id0={id} id1={1}/>
+      <SmallGrid id0={id} id1={2}/>
     </View>
   )
 }
 
-const LargeGrid = ({vals, isRed, update}) => {
+const LargeGrid = () => {
   return (
     <View style={styles.largeGrid}>
-      <GridRow id={0} vals={vals}  isRed={isRed} update={update}/>
-      <GridRow id={1} vals={vals}  isRed={isRed} update={update}/>
-      <GridRow id={2} vals={vals}  isRed={isRed} update={update}/>
+      <GridRow id={0}/>
+      <GridRow id={1}/>
+      <GridRow id={2}/>
     </View>
   )
 }
@@ -93,6 +99,39 @@ const Grid = ({vals, userName}) => {
           await AsyncStorage.setItem('@sudoku_best', JSON.stringify(value));
           console.log('just stored '+ jsonValue);
         }
+        //const jsonValue = JSON.stringify(value)
+      }
+
+    } catch (e) {
+      console.log("error in storeData ");
+      console.dir(e);
+      // saving error
+    }
+  }
+
+  const storeData2 = async (value) => {
+    try {
+      let userName = value.userName;
+      let timeText = value.timeText;
+      const jsonValue = await AsyncStorage.getItem('@sudoku_scores');
+      if (jsonValue == null) {
+        var data = [{
+          userName: userName,
+          time: time,
+          timeText: timeText
+        }]      
+        await AsyncStorage.setItem('@sudoku_scores', JSON.stringify(data));
+        console.log('just stored ' + value);
+      } else {
+        var data = JSON.parse(jsonValue);
+        var curData = {
+          userName: userName,
+          time: time,
+          timeText: timeText
+        };
+        var newData = [...data, curData];
+        await AsyncStorage.setItem('@sudoku_scores', JSON.stringify(newData));
+        console.log('just stored '+ jsonValue);
         //const jsonValue = JSON.stringify(value)
       }
 
@@ -254,6 +293,7 @@ const Grid = ({vals, userName}) => {
     setCurY(y);
   }
 
+
   return (
     <KeyboardAvoidingView 
       behavior={Platform.OS === "ios" ? "padding" : "height"}
@@ -262,7 +302,10 @@ const Grid = ({vals, userName}) => {
         {isFinished ? <Text>N/A</Text> : <Timer updateTime={updateTime}/>}
       </View>
       <View style={styles.mainPart}>
-        <LargeGrid vals={vals} isRed={isRed} update={update} updateSelected={updateSelected}/>
+      <ValueProvider
+        value={{vals, isRed, update}} >  
+        <LargeGrid/>
+      </ValueProvider>
       </View>
       <View style={styles.subPart}>
         <View style={styles.subPart1}>
@@ -285,6 +328,7 @@ const Grid = ({vals, userName}) => {
                 let timeText = (parseInt(time / 60) < 10 ? "0" + parseInt(time / 60) : parseInt(time % 60)) + ":" + ((time % 60) < 10 ? "0" + time % 60 : time % 60);
                 const theInfo = {userName:userName, time:time, timeText:timeText};
                 storeData(theInfo);
+                storeData2(theInfo);
                 //alert(JSON.stringify(theInfo));
 
               } else {
