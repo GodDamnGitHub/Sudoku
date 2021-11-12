@@ -6,10 +6,10 @@
 
 A sudoku app based on react native,  including hint, answer checking and highest score recording. Runs on both webpage or iOS.
 
-![ScreenShot](https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/web.png| width=600)
+![ScreenShot](https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/web.png | width=600)
 
 
-![ScreenShot](https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/iOS.png| width=200)
+![ScreenShot](https://github.com/GodDamnGitHub/Sudoku/blob/CPA4/img/iOS.png | width=200)
 
 
 
