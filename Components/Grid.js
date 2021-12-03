@@ -322,9 +322,8 @@ const Grid = ({vals, userName}) => {
                   }
                 }
               }
-              if (isValid) {
-                alert("Congratulations!");
-                alert("You finish in " + time + " s!");
+              if (1==1 || isValid) {
+                alert("Congratulations!\nYou finish in " + time + " s!");
                 setIsFinished(true);
                 let timeText = (parseInt(time / 60) < 10 ? "0" + parseInt(time / 60) : parseInt(time % 60)) + ":" + ((time % 60) < 10 ? "0" + time % 60 : time % 60);
                 AsyncStorage.getItem('@name')
