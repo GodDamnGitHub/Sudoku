@@ -3,12 +3,21 @@ import { Button, View, Text, StyleSheet, ImageBackground, Image, FlatList } from
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 import AsyncStorage from '@react-native-async-storage/async-storage'
+import Axios from 'axios'
 
 
-const Item = ({ name, time }) => (
+const url = "https://secure-earth-67171.herokuapp.com";
+
+
+
+const Item = ({ name, time, date}) => (
   <View style={styles.item}>
-    <Text style={{fontSize:32}}>{name}    {time}</Text>
+    <Text style={{fontSize:32}}>{name}  {time}  {date}</Text>
   </View>
+);
+
+const renderItem = ({ item }) => (
+  <Item name={item.name} time={item.time + 's'} date={item.createdAt.substring(0,10)}/>
 );
 
 
@@ -16,41 +25,52 @@ function HighScoresScreen() {
 
   const [data, setData] = useState("");
 
+  const FlatListItemSeparator = () => {
+    return (
+      <View
+        style={{
+          height: 1,
+          width: "100%",
+          backgroundColor: "#000",
+        }}
+      />
+    );
+  }
 
-  const renderItem = ({ item }) => (
-    <Item name={item.userName} time={item.timeText} />
-  );
-
-  const getData = async () => {
+  const getData = () => {
     try {
-      const jsonValue = await AsyncStorage.getItem('@sudoku_scores');
-      let data = null
-      if (jsonValue!=null) {
-        data = JSON.parse(jsonValue);
-        setData(data.sort((a,b)=>a.time-b.time));
-        //alert(jsonValue);
-        console.log('just set Info, Correct and Answered')
-      } else {
-        console.log('just read a null value from Storage')
-      }
+      Axios.get(url+'/scores')
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+        //alert(data[0]);
+        //console.log(response.data[0]);
+        //alert(response.data[0].age);
+      });
     } catch(e) {
       console.log("error in getData ")
       console.dir(e)
       // error reading value
-    }
+    } 
   }
 
-  const clearAll = async () => {
-    try {
-      await AsyncStorage.clear();
-    } catch(e) {
-      console.dir(e);
-    }
+  const getMyData = () => {
+    AsyncStorage.getItem('@name')
+    .then((response) => {
+      Axios.get(url+'/myscores/'+response)
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+        //alert(data[0]);
+        //console.log(response.data[0]);
+        //alert(response.data[0].age);
+      })
+    }) 
   }
 
   useEffect(() => {
     //clearAll();
-    getData()
+    getMyData()
   },[])
 
   
@@ -58,10 +78,37 @@ function HighScoresScreen() {
 
     
     <View style={styles.container}>
-      <FlatList
-        data={data}
-        renderItem={renderItem}
-      />
+      <View style={styles.buttons}>
+        <Button color="green" 
+          title="Local" 
+          onPress={() => {
+            AsyncStorage.getItem('@name')
+            .then((response) => {
+              //setData(response.data);
+              console.log(response);
+              getMyData(response);
+              //alert(data[0]);
+              //console.log(response.data[0]);
+              //alert(response.data[0].age);
+            });
+          }}>
+        </Button>
+        <Button color="blue" 
+          title="Global" 
+          onPress={() => {
+            getData();
+          }}>
+        </Button>
+      </View>
+      <View style={styles.data}>
+        <FlatList
+            data={data}
+            renderItem={renderItem}
+            keyExtractor={item => item.createdAt}
+            ItemSeparatorComponent={FlatListItemSeparator}
+        />
+      </View>
+
     </View>
   );
 }
@@ -71,11 +118,21 @@ export default HighScoresScreen;
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    alignItems: 'center',
+    alignItems: 'stretch',
     justifyContent: 'center'
   },
+  buttons: {
+    flexDirection: 'row', 
+    flex: 1, 
+    alignItems: 'center',
+    justifyContent: 'space-around'
+  },
+  data: {
+    flex: 10, 
+    alignItems: 'center',
+    justifyContent: 'center'  },
   item: {
-    backgroundColor: 'grey',
+    //backgroundColor: 'grey',
     padding: 20,
     marginVertical: 8,
     marginHorizontal: 16,

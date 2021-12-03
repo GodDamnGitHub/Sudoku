@@ -13,32 +13,13 @@ function EasyModeScreen() {
   let vals = easyData.sudokuList[rand];
   const [isInput, setIsInput] = useState(false);
   const [userName, setUserName] = useState("");
-  if (!isInput) {
-    return (
-      <View style={styles.container}>
-        <TextInput
-          style={styles.input}
-          onChangeText = {(text) => {
-            setUserName(text);
-          }}
-          placeholder="Please enter your name"
-        />
-        <Button color="blue" 
-          title="submit" 
-          onPress={() => {
-            setIsInput(true);
-          }}>
-        </Button>
-      </View>
 
-    );
-  } else {
     return (
       <View style={styles.container}>
         <Grid vals={vals} userName={userName}/>
       </View>
     );
-  }
+  
 
 }
 

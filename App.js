@@ -1,5 +1,5 @@
-import * as React from 'react';
-import { Button, View, Text, StyleSheet, ImageBackground, Image, useWindowDimensions} from 'react-native';
+import React, { useState, useEffect, useRef, createRef, setState } from "react"
+import { Button, View, Text, StyleSheet, ImageBackground, Image, useWindowDimensions, TextInput} from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
 
@@ -7,45 +7,107 @@ import EasyModeScreen from './Components/EasyModeScreen.js';
 import HardModeScreen from './Components/HardModeScreen.js';
 import HighScoresScreen from './Components/HighScoresScreen.js';
 import AboutScreen from './Components/AboutScreen.js';
+import AsyncStorage from '@react-native-async-storage/async-storage';
+import Axios from 'axios'
+
+
+const url = "https://secure-earth-67171.herokuapp.com";
+
+
 
 
 function HomeScreen({ navigation }) {
   const window = useWindowDimensions();
+  const [isInput, setIsInput] = useState(false);
+  const [name, setName] = useState();
+  const [password, setPassword] = useState();
 
+  const logout = () => {
+    alert("!");
+  }
 
-  return (
-    <View style={styles.container}>
-      <ImageBackground source={require('./assets/imageBack0.png')} resizeMode="cover" style={styles.imageBack}>
-        <View style={styles.titleView}>
-        <Image style={styles.imageTitle} source={require('./assets/Sudoku.png')} />
-        </View>        
-        <View style={styles.buttonView}>
+  if (!isInput) {
+    return (
+      <View style={styles.container0}>
+      <TextInput
+        style={styles.input}
+        onChangeText = {(text) => {
+          setName(text);
+        }}
+        placeholder="enter your name"
+      />
+      <TextInput
+        style={styles.input}
+        secureTextEntry={true}
+        onChangeText = {(text) => {
+          setPassword(text);
+        }}
+        placeholder="enter your password"
+      />
+      <Button color="blue" 
+        title="LOGIN" 
+        onPress={() => {
+          let data = {name: name, password: password};
+          Axios.post(url+'/login', data)
+          .then((response) => {
+            console.log(response.data);
+            if (response.data == "wrong password") {
+              alert("Wrong Password!");
+            } else {
+              if (response.data == "new user registered") {
+                alert("Hello new user!\nYou are now registered!\nname: "+name+"\npassword: "+password);
+              } else if (response.data == "login completes") {
+                alert("Log in successfully!");
+              }
+              AsyncStorage.setItem('@name', name);
+              setIsInput(true);
+            }
 
-          <Button
-            title="Easy Mode"
-            onPress={() => navigation.navigate('EasyMode')}
-          />
-          <Button
-            title="Hard Mode"
-            onPress={() => navigation.navigate('HardMode')}
-          />
-          <Button
-            title="High Scores"
-            onPress={() => navigation.navigate('HighScores')}
-          />
-          <Button
-            title="About"
-            onPress={() => navigation.navigate('About')}
-          />
-        </View>
-        <View style={styles.bottomView}>
-
-        </View>
-
-      </ImageBackground>
+          });
+        }}>
+      </Button>
 
     </View>
-  );
+    )
+  } else {
+    return (
+
+      <View style={styles.container}>
+        <ImageBackground source={require('./assets/imageBack0.png')} resizeMode="cover" style={styles.imageBack}>
+          <View style={styles.titleView}>
+          <Image style={styles.imageTitle} source={require('./assets/Sudoku.png')} />
+          </View>        
+          <View style={styles.buttonView}>
+  
+            <Button
+              title="Start"
+              onPress={() => navigation.navigate('EasyMode')}
+            />
+            <Button
+              title="High Scores"
+              onPress={() => navigation.navigate('HighScores')}
+            />
+            <Button
+              title="About"
+              onPress={() => navigation.navigate('About')}
+            />
+            <Button
+              title="Log out"
+              onPress={() => {
+                setIsInput(false);
+              }}
+            />
+          </View>
+          <View style={styles.bottomView}>
+  
+          </View>
+  
+        </ImageBackground>
+  
+      </View>
+    );
+  }
+
 }
 
 
@@ -57,18 +119,22 @@ function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="EasyMode" component={EasyModeScreen} />
-        <Stack.Screen name="HardMode" component={HardModeScreen} />
         <Stack.Screen name="HighScores" component={HighScoresScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
-
       </Stack.Navigator>
     </NavigationContainer>
+    
   );
 }
 
 export default App;
 
 const styles = StyleSheet.create({
+  container0: {
+    flex: 1,
+    alignItems: 'center',
+    justifyContent: 'center'
+  },
   container: {
     flex: 1,
     alignItems: 'stretch',
@@ -98,4 +164,10 @@ const styles = StyleSheet.create({
     flex: 1,
     width: 400
   },
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
+  }
 });

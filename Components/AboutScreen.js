@@ -1,34 +1,43 @@
-import * as React from 'react';
-import { Button, View, Text, StyleSheet, ImageBackground, Image } from 'react-native';
+import React, { useState, useEffect } from "react";
+import { Button, View, Text, StyleSheet, ImageBackground, Image, ScrollView } from 'react-native';
 import { NavigationContainer } from '@react-navigation/native';
 import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import CloudRegistration from './CloudRegistration';
+import { MarkdownView } from 'react-native-markdown-view'
+
 
 function AboutScreen() {
+
+  const[file, setFile] = useState();
+
+
+
   return (
     <View style={styles.container}>
-      <ImageBackground source={require('../assets/imageBack.jpeg')} resizeMode="cover" style={styles.imageBack}>
+      <ScrollView>
 
-      <View style={styles.p1}>
-        <Text style={{fontSize: 30}}>
-          The Origin of Sudoku{'\n'}{'\n'}
-        </Text>
-        <Text>
-          Sudoku, originally called Number Place is a logic-based, combinatorial number-placement puzzle. In classic sudoku, the objective is to fill a 9×9 grid with digits so that each column, each row, and each of the nine 3×3 subgrids that compose the grid (also called "boxes", "blocks", or "regions") contain all of the digits from 1 to 9. The puzzle setter provides a partially completed grid, which for a well-posed puzzle has a single solution.{'\n'}{'\n'}
+      <MarkdownView>
+        # About the Project{'\n'}
+        {'\n'}
+        This is a sudoku app based on react native. Create your account, log in, and enjoy the game. There is a hint function to tell you where the conflics are when You will enter a wrong number. If finished, press the submit button and your score will be recorded. Check both local and global high scores on High Score page.  An express server which interacts with MongoDB is deployed to heroku so players all around the world can play this game. Runs on both webpage and iOS.
+        {'\n'}
+        {'\n'}
 
-          French newspapers featured variations of the Sudoku puzzles in the 19th century, and the puzzle has appeared since 1979 in puzzle books under the name Number Place.However, the modern Sudoku only began to gain widespread popularity in 1986 when it was published by the Japanese puzzle company Nikoli under the name Sudoku, meaning "single number". It first appeared in a U.S. newspaper, and then The Times (London), in 2004, thanks to the efforts of Wayne Gould, who devised a computer program to rapidly produce unique puzzles.{'\n'}{'\n'}
-        </Text>
+        ![RN Logo](https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e1.png?raw=true){'\n'}
+        ![RN Logo](https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e2.png?raw=true){'\n'}
+        ![RN Logo](https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e3.png?raw=true){'\n'}
+        ![RN Logo](https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e4.png?raw=true){'\n'}
+        {'\n'}
+        # Built With {'\n'}
+          * React {'\n'}
+          * React Native{'\n'}
+          * AsyncStorage{'\n'}
+          * Axios {'\n'}
+          * MarkdownView {'\n'}
 
-        <Text style={{fontSize: 30}}>
-          About This Game{'\n'}{'\n'}
-        </Text>
-
-        <Text>
-          In easy mode, even beginners will have fun, but the hard mode is only for experienced sudoku solvers. Fewer numbers are given and you should know advanced sudoku solving techniques. {'\n'}{'\n'}
-
-          A timer will start when you begin to play. When you finish, you will be asked to input your name, and the time you spent will be shown on the "High Scores" page. Enjoy the game!
-        </Text>
-      </View>
-      </ImageBackground>
+        
+      </MarkdownView>   
+      </ScrollView> 
     </View>
   );
 }
@@ -39,7 +48,7 @@ const styles = StyleSheet.create({
   container: {
     flex: 1,
     alignItems: 'center',
-    justifyContent: 'center',
+    justifyContent: 'flex-start',
     padding: 20,
   },
   p1: {

@@ -1,10 +1,11 @@
 import React, { useState, useEffect, useRef, createRef, setState, useContext, createContext } from "react"
 import { Text, TextInput, View, StyleSheet, Button, TouchableOpacity, KeyboardAvoidingView, Platform } from 'react-native';
-import Constants from 'expo-constants';
 import AsyncStorage from '@react-native-async-storage/async-storage';
 import Timer from './Timer';
 import ValueProvider, {useValue} from './ValueContext';
+import Axios from 'axios';
 
+const url = "https://secure-earth-67171.herokuapp.com";
 
 
 const Cell = ({id0, id1, id2, id3}) => {
@@ -326,9 +327,14 @@ const Grid = ({vals, userName}) => {
                 alert("You finish in " + time + " s!");
                 setIsFinished(true);
                 let timeText = (parseInt(time / 60) < 10 ? "0" + parseInt(time / 60) : parseInt(time % 60)) + ":" + ((time % 60) < 10 ? "0" + time % 60 : time % 60);
-                const theInfo = {userName:userName, time:time, timeText:timeText};
-                storeData(theInfo);
-                storeData2(theInfo);
+                AsyncStorage.getItem('@name')
+                  .then((userName) => {
+                    const data = {name:userName, time:time};
+                    Axios.post(url+'/submit',data);
+                  })
+
+                //storeData(theInfo);
+                //storeData2(theInfo);
                 //alert(JSON.stringify(theInfo));
 
               } else {
@@ -338,16 +344,7 @@ const Grid = ({vals, userName}) => {
           </Button>
         </View>
 
-        <View style={styles.subPart2}>
-          <Button color="green" 
-            title="BEST SCORE" 
-              onPress={() => {
-                getData();
-                setIsVisible(!isVisible);
-              }}>
-            </Button>
-            {isVisible ? <Text>{bestPerson} finished in {bestTime} s !</Text> : <View/>}
-        </View>
+
 
       </View>
 
