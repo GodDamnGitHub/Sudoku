@@ -8,11 +8,11 @@ This is a sudoku app based on react native. Create your account, log in, and enj
 
 <img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e01.png?raw=true" width="366" height="708" />
 
-<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e02.png?raw=true" style="zoom:  25%;" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e02.png?raw=true" width="366" height="708" />
 
-<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e03.png?raw=true" style="zoom: 25%;" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e03.png?raw=true" width="366" height="708" />
 
-<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e04.png?raw=true" style="zoom:  25%;" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e04.png?raw=true" width="366" height="708" />
 
 
 
