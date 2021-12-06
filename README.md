@@ -4,11 +4,11 @@
 
 ### About the Project
 
-A sudoku app based on react native,  including hint, answer checking and highest score recording. Runs on both webpage or iOS.
+This is a sudoku app based on react native. Create your account, log in, and enjoy the game. There is a hint function to tell you where the conflicts are when you enter a wrong number. If finished, press the submit button and your score will be recorded. Check both local and global high scores on High Score page.  An express server interacting with MongoDB is deployed to heroku so players all around the world can play this game. Runs on both webpage and iOS.
 
-<img src="/Users/felix/Library/Mobile Documents/com~apple~CloudDocs/Learning/Brandeis/CS153A/Projects/Sudoku/image-20211112010551201.png" alt="image-20211112010551201" style="zoom: 25%;" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e01.png?raw=true" style="zoom: 25%;" />
 
-<img src="/Users/felix/Library/Mobile Documents/com~apple~CloudDocs/Learning/Brandeis/CS153A/Projects/Sudoku/image-20211112010822969.png" alt="image-20211112010822969" style="zoom:33%;" />
+<img src="https://github.com/GodDamnGitHub/Sudoku/blob/CPA5/img/e02.png?raw=true" style="zoom:  25%;" />
 
 
 
@@ -23,22 +23,6 @@ A sudoku app based on react native,  including hint, answer checking and highest
 - AsyncStorage 
 
 
-
-### Future Plan
-
-- Use mongoDB to store user info 
-
-- Deploy a nodejs server to heroku to interact with the app
-
-- Login Interface
-
-- Personal and global high score 
-
-- Instead of question bank, there will be an algorithm to generate puzzles automatically 
-
-- Hint function 
-
-- Further beautify the UI
 
   
 
