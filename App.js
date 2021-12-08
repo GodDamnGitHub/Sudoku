@@ -80,8 +80,12 @@ function HomeScreen({ navigation }) {
           <View style={styles.buttonView}>
   
             <Button
-              title="Start"
+              title="Easy Mode"
               onPress={() => navigation.navigate('EasyMode')}
+            />
+            <Button
+              title="Hard Mode"
+              onPress={() => navigation.navigate('HardMode')}
             />
             <Button
               title="High Scores"
@@ -119,6 +123,7 @@ function App() {
       <Stack.Navigator initialRouteName="Home">
         <Stack.Screen name="Home" component={HomeScreen} />
         <Stack.Screen name="EasyMode" component={EasyModeScreen} />
+        <Stack.Screen name="HardMode" component={HardModeScreen} />
         <Stack.Screen name="HighScores" component={HighScoresScreen} />
         <Stack.Screen name="About" component={AboutScreen} />
       </Stack.Navigator>

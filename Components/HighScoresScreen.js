@@ -24,6 +24,9 @@ const renderItem = ({ item }) => (
 function HighScoresScreen() {
 
   const [data, setData] = useState("");
+  const [mode, setMode] = useState("easy");
+
+
 
   const FlatListItemSeparator = () => {
     return (
@@ -68,10 +71,45 @@ function HighScoresScreen() {
     }) 
   }
 
+  const getHardData = () => {
+    try {
+      Axios.get(url+'/hardscores')
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+        //alert(data[0]);
+        //console.log(response.data[0]);
+        //alert(response.data[0].age);
+      });
+    } catch(e) {
+      console.log("error in getData ")
+      console.dir(e)
+      // error reading value
+    } 
+  }
+
+  const getMyHardData = () => {
+    AsyncStorage.getItem('@name')
+    .then((response) => {
+      Axios.get(url+'/myhardscores/'+response)
+      .then((response) => {
+        setData(response.data);
+        console.log(response.data);
+        //alert(data[0]);
+        //console.log(response.data[0]);
+        //alert(response.data[0].age);
+      })
+    }) 
+  }
+
+
   useEffect(() => {
-    //clearAll();
-    getMyData()
-  },[])
+    if (mode == "easy") {
+      getMyData();
+    } else {
+      getMyHardData();
+    }
+  },[mode])
 
   
   return (
@@ -84,19 +122,33 @@ function HighScoresScreen() {
           onPress={() => {
             AsyncStorage.getItem('@name')
             .then((response) => {
-              //setData(response.data);
               console.log(response);
-              getMyData(response);
-              //alert(data[0]);
-              //console.log(response.data[0]);
-              //alert(response.data[0].age);
+              if (mode == "easy") {
+                getMyData(response);
+              } else {
+                getMyHardData(response);
+              }
             });
+          }}>
+        </Button>
+        <Button color="purple" 
+          title={mode=="easy"?"SWITCH TO HARD":"SWITCH TO EASY"}
+          onPress={() => {
+            if (mode == "easy") {
+              setMode("hard");
+            } else {
+              setMode("easy");
+            }
           }}>
         </Button>
         <Button color="blue" 
           title="Global" 
           onPress={() => {
-            getData();
+            if (mode == "easy") {
+              getData();
+            } else {
+              getHardData();
+            }
           }}>
         </Button>
       </View>

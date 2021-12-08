@@ -82,7 +82,7 @@ const LargeGrid = () => {
   )
 }
 
-const Grid = ({vals, userName}) => {
+const Grid = ({vals, userName, mode}) => {
 
   const storeData = async (value) => {
     try {
@@ -323,14 +323,17 @@ const Grid = ({vals, userName}) => {
                 }
               }
               if (isValid) {
-                alert("Congratulations!");
-                alert("You finish in " + time + " s!");
+                alert("Congratulations!\nYou finish in " + time + " s!");
                 setIsFinished(true);
                 let timeText = (parseInt(time / 60) < 10 ? "0" + parseInt(time / 60) : parseInt(time % 60)) + ":" + ((time % 60) < 10 ? "0" + time % 60 : time % 60);
                 AsyncStorage.getItem('@name')
                   .then((userName) => {
                     const data = {name:userName, time:time};
-                    Axios.post(url+'/submit',data);
+                    if (mode == "easy") {
+                      Axios.post(url+'/submit',data);
+                    } else if (mode == "hard") {
+                      Axios.post(url+'/submithard',data);
+                    }
                   })
 
                 //storeData(theInfo);

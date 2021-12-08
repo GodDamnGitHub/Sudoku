@@ -1,165 +1,85 @@
-/*
-  Books with Context
-  This is a demo of an app which shows the users favorite books
-  This gets the appKey, appURL, and userKey from the Context
-*/
-import React,{useState,useEffect} from 'react';
-import { SafeAreaView, ScrollView, View, FlatList, StyleSheet, Text, TextInput, Button, StatusBar, Image } from 'react-native';
-
-import AsyncStorage from '@react-native-async-storage/async-storage';
+import React, { useState, useEffect, useRef, createRef, setState } from "react"
+import { Button, View, Text, StyleSheet, ImageBackground, Image, TextInput } from 'react-native';
+import { NavigationContainer } from '@react-navigation/native';
+import { createNativeStackNavigator } from '@react-navigation/native-stack';
+import Grid from './Grid.js';
+import * as easyData from '../data/easyData.json';
 import Axios from 'axios'
 
-import {useValue} from './ValueContext';
-import appKey,{appURL} from '../lib/appKey.js'
 
-const Item = ({ title, author, description, id, json}) => (
-  <View style={styles.item}>
-    <Text style={styles.title}>{title.trim()}</Text>
-    <Text>{author.trim()}</Text>
-    <Text> {description} </Text>
-    <Text> json form: {JSON.stringify(json)} </Text>
-    <Button title={"id="+JSON.stringify(id)} />
-  </View>
-);
+const url = "https://secure-earth-67171.herokuapp.com";
+
+
 
 function HardModeScreen() {
-  /*const {currentValue,setCurrentValue} = useValue();
-  const appKey = currentValue.appKey
-  const appURL = currentValue.appURL
-  const userKey = currentValue.userKey*/
-  const userKey = '6192d30c0164100004e78941'
-  //console.log('currentValue=')
-  //console.dir(currentValue)
+  var rand = 0 + Math.floor(Math.random() * (9 - 0 + 1));
+  var data = [];
+  const[sudokuData, setSudokuData] = useState("");
 
-  const [data,setData] = useState([])
-  const [books,setBooks] = useState([])
-  const [title,setTitle] = useState("")
-  const [author,setAuthor] = useState("")
-  const [description,setDescription] = useState("")
+  const[isLoading, setIsLoading] = useState(true);
 
   useEffect(() => {
-    getCloudData()
+    Axios.get(url+'/gethard')
+    .then((response) => {
+      let sudokuStr = response.data;
+      var count = 0;
+      for (var i = 0; i < 9; i++) {
+        let line = [];
+        for (var j = 0; j < 9; j++) {
+          let cur = sudokuStr.charAt(count);
+          count++;
+          if (cur == ".") {
+            line.push("");
+          } else {
+            line.push(cur);
+          }
+        }
+        //alert(line);
+        data.push(line);
+      }
+      //alert(data);
+      setSudokuData(data);
+      setIsLoading(false);
+      //alert(data);
+    });
   },[])
 
 
 
-  const storeCloudData = async (value) => {
-    console.log('in storeCloudData, data=')
-    let data = {appKey:appKey,
-                userKey:userKey,
-                valueKey:'@books',
-                value:value}
-    console.dir(data)
-    let result =
-      await Axios.post(appURL+'/storeData',data)
-    console.log(`result=`)
-    console.dir(result.data)
-  }
+  let vals = easyData.sudokuList[0];
+  const [isInput, setIsInput] = useState(false);
+  const [userName, setUserName] = useState("");
 
-  const getCloudData = async () => {
-    console.log('in getCloudData data=')
-    let data = {appKey:appKey,
-                userKey:userKey,
-                valueKey:'@books'}
-    console.dir(data)
-
-    let result =
-      await Axios.post(appURL+'/getData',data)
-    console.log(`result=`)
-    console.dir(result)
-
-    const books =
-      result.data.map( elem => (
-        {id:elem.id, book:JSON.parse(elem.value)}
-      )
-    )
-        
-    alert(JSON.stringify(books))
-    console.log('books=')
-    console.dir(books)
-    setBooks(books)
-  }
-
-  const clearCloudData = async () => {
-    console.log('in clearCloudData data=')
-    let data = {appKey:appKey,
-                userKey:userKey,
-                valueKey:'@books'}
-    console.dir(data)
-
-    let result =
-      await Axios.post(appURL+'/clearData',data)
-    console.log(`result=`)
-    console.dir(result)
-    setBooks([])
-  }
-
-  const renderBook = ({ item }) => (
-    <View>
-      <Item
-          title={item.book.title}
-          author={item.book.author}
-          description={item.book.description + JSON.stringify(item)}
-          id = {item.id}
-          json={item}
-      />
-    </View>
-  );
-
-  return (
-    <SafeAreaView style={styles.container}>
-     <ScrollView>
-      <Text style={{fontSize:32,
-                    backgroundColor:'red'}}>
-         books
-      </Text>
-      <Text> userKey='{userKey}' appKey='{appKey}' appURL={appURL} </Text>
-      <FlatList
-        data={books}
-        renderItem={renderBook}
-        keyExtractor={(item,index) => item.title+item.author+index}
-      />
-      <View>
-        <Text>Add a book</Text>
-        <TextInput placeholder="title" onChangeText={(text) => setTitle(text)} />
-        <TextInput placeholder="author" onChangeText={(text) => setAuthor(text)} />
-        <TextInput placeholder="description" onChangeText={(text) => setDescription(text)} />
-        <View style={{flexDirection:'row'}}>
-          <Button title="store book" color='pink' onPress={() =>{
-            const book = {title,author,description}
-            storeCloudData(book)
-          }} />
-          <Button title="get cloud data" color='lightgreen' onPress={() => getCloudData()} />
-          <Button title="clear cloud data" color='red' onPress={() => clearCloudData()} />
-        </View>
+  if (isLoading) {
+    return (
+      <View></View>
+    );
+  } else {
+    return (
+      <View style={styles.container}>
+        <Grid vals={sudokuData} userName={userName} mode="hard"/>
       </View>
-     </ScrollView>
-    </SafeAreaView>
-  );
+    );
+  }
+  
+
 }
+
 
 export default HardModeScreen;
 
 const styles = StyleSheet.create({
   container: {
     flex: 1,
-    marginTop: StatusBar.currentHeight || 0,
+    alignItems: 'center',
+    justifyContent: 'center'
   },
-  item: {
-    flex:4,
-    backgroundColor: '#f9c2ff',
-    padding: 20,
-    marginVertical: 8,
-    marginHorizontal: 16,
-  },
-  title: {
-    fontSize: 32,
+  input: {
+    height: 40,
+    margin: 12,
+    borderWidth: 1,
+    padding: 10,
   },
 });
-
-
-
-
-
 
 
